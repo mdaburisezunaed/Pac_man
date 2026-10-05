@@ -19,29 +19,24 @@
 #include <cstdlib>
 #include <ctime>
 
-// Professor said using namespace std is bad practice in header files,
-// but since this is just a single .cpp file project, it saves me from typing std:: 500 times!
+// using namespace std so we don't have to write std:: in front of everything
 using namespace std;
 
 // ============================================================================
-// ASSIGNMENT: CS101 Final Project - Arcade Pac-Man Recreation
-// Student / Developer Name: Md. Abu Rise Zunaed
-// Language: C++17 with SDL2 Graphics & Sound
-// 
-// [AI GENERATED PROMPT]:
-// "Write a complete single-file C++ arcade Pac-Man game using SDL2. Must include
-// real-time polyphonic audio synthesis, all 4 ghost AI personalities (Blinky,
-// Pinky, Inky, Clyde), sub-pixel corner pre-buffering, and 8-bit text rendering."
-// 
-// Student Note to Grader / TA:
-// - Please don't deduct points for the function names! Some are camelCase and
-//   some are snake_case because I asked AI at different times during the week.
-// - All audio is generated procedurally using math (sine and triangle wave oscillators)
-//   because I couldn't figure out how to load external .wav files without errors.
-// - Game runs at a locked 60 FPS using std::chrono delta-time timing!
+// PAC-MAN ARCADE RECREATION
+// Developer: Md. Abu Rise Zunaed
+// Language: C++17 (Single File Implementation using SDL2)
+//
+// Features:
+// - 1980 Namco arcade maze recreation with 24px tile dimensions (28x31 grid)
+// - Real-time software audio synthesis with multi-channel oscillators
+// - All 4 ghost personalities: Blinky (chase), Pinky (intercept),
+//   Inky (flank), and Clyde (shy/wander)
+// - Sub-pixel corner pre-buffering and locked 60 FPS delta-time loop
+// - Self-contained custom 8-bit bitmap font rendering
 // ============================================================================
 
-// Screen and grid dimensions (AI calculated these for 24px tiles)
+// Screen and grid dimensions for 24px tiles
 const int COLS = 28;
 const int ROWS = 31;
 const int TILE_SIZE = 24; // 28 columns * 24 pixels = 672 width
@@ -125,8 +120,8 @@ struct FloatingScore {
 };
 
 // ============================================================================
-// BUILT-IN 8-BIT BITMAP FONT (AI Generated Hex Table)
-// Description: AI gave me this 5x7 pixel font matrix so we don't need SDL_ttf!
+// BUILT-IN 8-BIT BITMAP FONT
+// Description: 5x7 pixel font matrix lookup table so we don't need SDL_ttf!
 // ============================================================================
 const uint8_t FONT_5X7[][7] = {
     { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // ' '
@@ -193,8 +188,7 @@ const uint8_t FONT_5X7[][7] = {
     { 0x0E, 0x02, 0x02, 0x02, 0x02, 0x02, 0x0E }  // ']'
 };
 
-// [AI Generated Function]: Renders 8-bit text to screen using SDL_RenderFillRect
-// Student Note: I called it render_arcade_text_helper so I know what it does
+// Helper function to render 8-bit text characters on screen using SDL_RenderFillRect
 void render_arcade_text_helper(SDL_Renderer* ren, const string& text, int startX, int startY, int scale, SDL_Color col) {
     SDL_SetRenderDrawColor(ren, col.r, col.g, col.b, col.a);
     int curX = startX;
@@ -219,7 +213,7 @@ void render_arcade_text_helper(SDL_Renderer* ren, const string& text, int startX
 
 // ============================================================================
 // AUDIO SECTION: Polyphonic Synthesizer
-// Description: AI helped me build a software synth using SDL_AudioCallback.
+// Description: Custom software synthesizer class using SDL_AudioCallback.
 // It generates sine and triangle waves on the fly.
 // ============================================================================
 struct Note {
@@ -362,10 +356,10 @@ public:
     }
 };
 
-// Global audio object (TA said global variables are bad, but SDL callback requires static access)
+// Global audio object pointer so the SDL audio callback can reach it
 static SoundManagerThingy g_audio;
 
-// [AI Generated Audio Callback]: This is invoked in a background thread by SDL
+// Audio callback function invoked in a background thread by SDL
 void myAudioCallbackFunction(void*, Uint8* stream, int len) {
     Sint16* buffer = reinterpret_cast<Sint16*>(stream);
     int samples = len / sizeof(Sint16);
@@ -454,7 +448,7 @@ void myAudioCallbackFunction(void*, Uint8* stream, int len) {
 // RENDERING HELPERS: Circles and Pac-Man Mouth
 // ============================================================================
 
-// [AI Helper Function]: Draw filled circle using horizontal scanlines
+// Helper function to draw a filled circle using horizontal scanlines
 void draw_circle_filled_helper(SDL_Renderer* ren, int cx, int cy, int radius, SDL_Color col) {
     SDL_SetRenderDrawColor(ren, col.r, col.g, col.b, col.a);
     for (int dy = -radius; dy <= radius; dy++) {
@@ -463,8 +457,8 @@ void draw_circle_filled_helper(SDL_Renderer* ren, int cx, int cy, int radius, SD
     }
 }
 
-// [AI Helper Function]: Mathematically correct directional mouth wedge cutout & death dissolution
-// Note: AI gave me this rotation switch statement so Pac-Man faces the direction he moves!
+// Function to draw Pac-Man with directional mouth wedge cutout and death animation
+// Calculates rotation based on direction so Pac-Man faces where he is moving
 void draw_pacman_character_exact(SDL_Renderer* ren, float cx, float cy, float radius, float mouthTan, Direction dir, SDL_Color col, float deathProgress = 0.0f) {
     SDL_SetRenderDrawColor(ren, col.r, col.g, col.b, col.a);
     int rInt = static_cast<int>(radius);
@@ -942,7 +936,7 @@ public:
         }
     }
 
-    // AI logic to calculate where each ghost wants to go
+    // Ghost targeting logic to calculate where each ghost wants to go
     Point calculate_target_tile_for_ghost(const GhostEntityClass& g) {
         int pacTileX = static_cast<int>(pacman.x / TILE_SIZE);
         int pacTileY = static_cast<int>(pacman.y / TILE_SIZE);
@@ -1052,7 +1046,7 @@ public:
     }
 
     // Update all 4 ghosts
-    void handleAllGhostEntitiesAI() {
+    void handleAllGhostEntitiesLogic() {
         // Mode switching timer (Chase vs Scatter)
         if (frightenedTimer > 0) {
             frightenedTimer--;
@@ -1287,7 +1281,7 @@ public:
         if (current_game_state != GameState::PLAYING) return;
 
         do_pacman_player_movement_logic();
-        handleAllGhostEntitiesAI();
+        handleAllGhostEntitiesLogic();
         check_if_pacman_is_touching_ghosts();
     }
 
