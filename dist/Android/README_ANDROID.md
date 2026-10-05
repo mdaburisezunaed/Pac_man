@@ -9,11 +9,19 @@
 Download **`Pac-Man.apk`** from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases) or the `dist/` directory:
 1. Transfer or download **`Pac-Man.apk`** directly to your Android device.
 2. Tap the downloaded file in your Files / Downloads app to install.
-   - *If prompted by Android, allow "Install from Unknown Sources" or "Install Unknown Apps" for your browser/file manager.*
+
+### ⚠️ Android Play Protect / Unknown Apps Notice:
+When installing the APK, Google Play Protect or Android may display a warning because the app was downloaded outside the Google Play Store.
+**To install:**
+1. When the prompt appears, tap **More details** (or **More info**).
+2. Tap **Install anyway**.
+3. If prompted by your browser or file manager, enable **"Allow from this source"**.
+4. The game will install and launch smoothly!
+
 3. Open **Pac-Man** from your app drawer and enjoy!
    - ⚡ **Zero-build & fully offline**: Runs without internet connection.
    - 🎮 **Immersive fullscreen sticky mode**: Hides navigation and status bars.
-   - 🕹️ **Arcade touch controls**: On-screen retro D-pad + responsive swipe gestures.
+   - 🕹️ **Arcade touch controls**: On-screen enlarged right-side D-pad + responsive swipe gestures.
 
 ---
 
