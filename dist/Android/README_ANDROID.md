@@ -4,7 +4,16 @@
 
 ---
 
-## How to Play on Android (Zero-Build Instant Play)
+## Option 1: Native Android Project (`Pac-Man-Android.zip`)
+
+Download **`Pac-Man-Android.zip`** from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases) or the `dist/` folder:
+- **Immersive Fullscreen:** Uses `SYSTEM_UI_FLAG_IMMERSIVE_STICKY` with full hardware acceleration.
+- **Pre-packaged Assets:** Includes all game logic, retro sounds, custom icons (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`), and responsive layout.
+- **Open in Android Studio:** Open the extracted directory in Android Studio and hit **Run** or build the signed APK (`Build > Build Bundle(s) / APK(s) > Build APK(s)`).
+
+---
+
+## Option 2: Zero-Build Instant Play (WebAPK / PWA)
 
 Android users can install and play Pac-Man without any coding, compiler, or build tools via WebAPK / PWA installation:
 
