@@ -33,8 +33,8 @@ Pre-packaged versions are ready for all platforms so anyone can download and pla
 - Pac-Man installs directly to your Android app drawer with the official logo. Opens in full screen with touch and swipe controls.
 
 ### 🪟 Windows (PC)
-- **Instant Play:** Open `web/index.html` in **Microsoft Edge** or **Google Chrome**, then click the **"Install"** button in the address bar to install Pac-Man as a native Windows desktop app with desktop shortcut and icon.
-- **Native .EXE Launcher:** Double-click `dist/Windows/Play_Pacman.bat` to launch or automatically build `pacman.exe`.
+- **One-Click Native Game:** Extract **`dist/Pac-Man-Windows.zip`** (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)) and double-click **`pacman.exe`** to play immediately! All runtime libraries (`SDL2.dll`, `libwinpthread`) and the custom arcade icon are pre-bundled—zero building or installation required.
+- **Web Desktop App:** Open `web/index.html` in **Microsoft Edge** or **Google Chrome**, then click the **"Install"** button in the address bar to install Pac-Man as a native Windows desktop app with desktop shortcut.
 
 ---
 
