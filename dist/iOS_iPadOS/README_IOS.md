@@ -4,23 +4,32 @@
 
 ---
 
-## How to Play on iPhone & iPad (Zero-Build Instant Play)
+## Installation Options for iPhone & iPad
 
-iOS and iPadOS support installing standalone web apps directly without needing Xcode, Mac signing certificates, or TestFlight:
+### Method 1: Sideload IPA Package (`Pac-Man.ipa`)
+Download **[`Pac-Man.ipa`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.ipa)** (or from `dist/Pac-Man.ipa`):
+- **Universal IPA:** Contains the compiled ARM64 Mach-O iOS binary, high-res app icons, and offline assets.
+- **Install using:**
+  - **Sideloadly / AltStore:** Drag & drop `Pac-Man.ipa`, enter your Apple ID to sign and install automatically.
+  - **TrollStore / Scarlet / Esign:** Open `Pac-Man.ipa` directly on your iPhone and tap **Install**.
+  - **Xcode / Apple Configurator:** Connect iPhone via USB and install via *Devices & Simulators*.
 
-### Step 1: Open in Safari
+---
+
+### Method 2: Instant Configuration Profile (`Pac-Man.mobileconfig`)
+1. Download **[`Pac-Man.mobileconfig`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.mobileconfig)** on your iPhone/iPad in Safari.
+2. Tap **Allow** when prompted: *"This website is trying to download a configuration profile."*
+3. Open iOS **Settings** ➔ Tap **"Profile Downloaded"** at the top.
+4. Tap **Install** in the top right corner.
+5. The **Pac-Man** arcade icon is instantly placed on your Home Screen in full-screen mode!
+
+---
+
+### Method 3: 1-Tap Safari "Add to Home Screen" (Zero-Build Instant Play)
 1. Open **Safari** on your iPhone or iPad.
-2. Open the Pac-Man web game (`web/index.html` hosted on your local network, GitHub Pages, or server).
-
-### Step 2: Add to Home Screen
-1. Tap the **Share** button at the bottom of Safari (the square icon with an upward-pointing arrow).
-2. Scroll down and tap **"Add to Home Screen"** (`+`).
-3. Tap **"Add"** in the top right corner.
-
-### Step 3: Launch from Home Screen
-- The **Pac-Man** app with its high-resolution arcade icon is now installed on your home screen.
-- When tapped, it launches in **true fullscreen mode** (no Safari URL bar, no bottom navigation tabs).
-- Features on-screen arcade D-pad, swipe gestures, and retro synthesizer audio.
+2. Open the Pac-Man web game (`web/index.html` or `https://mdaburisezunaed.github.io/Pac_man/`).
+3. Tap the **Share** button (box with upward arrow) ➔ tap **"Add to Home Screen"**.
+4. The game opens in full screen with touch swipe controls, retro arcade D-pad, and arcade audio!
 
 ---
 

@@ -22,10 +22,10 @@ Pre-packaged versions are ready for all platforms so anyone can download and pla
 - Double-click **`Pac-Man.app`** in the project folder (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)).
 - **No Homebrew or SDL required:** Dynamic libraries (`SDL2` and `SDL3`) are pre-bundled inside the application bundle.
 
-### 📱 iPhone & iPad (iOS / iPadOS)
-- Open `web/index.html` in **Safari**.
-- Tap the **Share** button (box with upward arrow) ➔ tap **"Add to Home Screen"**.
-- A native **Pac-Man** app icon will appear on your home screen. Tap it to play in fullscreen with touch controls (swipe & virtual D-pad) and synthesized arcade audio.
+### 📱 iPhone & iPad (iOS & iPadOS)
+- **Direct Sideload Package (IPA):** Download **[`Pac-Man.ipa`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.ipa)** (or from the `dist/` folder) and install with **AltStore**, **Sideloadly**, **TrollStore**, **Scarlet**, or Xcode/Apple Configurator. Full native ARM64 Mach-O app with embedded arcade audio and touch controls.
+- **1-Tap Profile Install:** Download **[`Pac-Man.mobileconfig`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.mobileconfig)** on iOS, tap *Allow*, then go to *Settings ➔ Profile Downloaded ➔ Install* to place the full-screen arcade app directly on your Home Screen.
+- **Safari Instant Play:** Open `web/index.html` in **Safari**, tap **Share** ➔ **Add to Home Screen**.
 
 ### 🤖 Android (APK & Native Mobile)
 - **Direct APK Install (Download & Play):** Download **[`Pac-Man.apk`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.apk)** (or from the `dist/` folder) directly onto your Android device and tap to install! Fully offline, hardware accelerated, immersive sticky fullscreen with arcade touch D-pad & swipe controls. Signed by **Md. Abu Rise Zunaed**.
