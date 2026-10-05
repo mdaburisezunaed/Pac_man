@@ -1,0 +1,14 @@
+# Binaries & build artifacts
+pacman
+*.o
+*.exe
+output/
+highscore.dat
+
+# Raw app bundle (dist/Pac-Man-macOS.zip is provided for downloads)
+Pac-Man.app/
+dist/macOS/
+
+# OS metadata
+.DS_Store
+Thumbs.db
