@@ -71,6 +71,7 @@ const INTRO_MELODY = [
 class RetroAudioEngine {
   constructor() {
     this.ctx = null;
+    this.masterGain = null;
     this.muted = false;
     this.sirenOsc = null;
     this.sirenGain = null;
@@ -81,11 +82,30 @@ class RetroAudioEngine {
   ensureContext() {
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
+      if (AudioCtx) {
+        try {
+          this.ctx = new AudioCtx();
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.setValueAtTime(this.muted ? 0 : 1, this.ctx.currentTime);
+          this.masterGain.connect(this.ctx.destination);
+        } catch (e) {
+          console.warn('AudioContext init error:', e);
+        }
+      }
     }
     if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
+    if (this.ctx && this.masterGain) {
+      try {
+        this.masterGain.gain.setValueAtTime(this.muted ? 0 : 1, this.ctx.currentTime);
+      } catch (e) {}
+    }
+  }
+
+  getMaster() {
+    this.ensureContext();
+    return this.masterGain || (this.ctx ? this.ctx.destination : null);
   }
 
   playIntro() {
@@ -94,6 +114,9 @@ class RetroAudioEngine {
     if (!this.ctx) return;
 
     this.setSiren(0);
+    const dest = this.getMaster();
+    if (!dest) return;
+
     let curTime = this.ctx.currentTime + 0.05;
     INTRO_MELODY.forEach(note => {
       const osc = this.ctx.createOscillator();
@@ -103,7 +126,7 @@ class RetroAudioEngine {
       gain.gain.setValueAtTime(0.2, curTime);
       gain.gain.exponentialRampToValueAtTime(0.001, curTime + note.dur * 0.95);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(dest);
       osc.start(curTime);
       osc.stop(curTime + note.dur);
       curTime += note.dur;
@@ -125,6 +148,9 @@ class RetroAudioEngine {
     this.ensureContext();
     if (!this.ctx) return;
 
+    const dest = this.getMaster();
+    if (!dest) return;
+
     this.sirenOsc = this.ctx.createOscillator();
     this.sirenGain = this.ctx.createGain();
     this.sirenLfo = this.ctx.createOscillator();
@@ -145,7 +171,7 @@ class RetroAudioEngine {
 
     this.sirenGain.gain.setValueAtTime(vol, this.ctx.currentTime);
     this.sirenOsc.connect(this.sirenGain);
-    this.sirenGain.connect(this.ctx.destination);
+    this.sirenGain.connect(dest);
 
     this.sirenOsc.start();
     this.sirenLfo.start();
@@ -155,6 +181,8 @@ class RetroAudioEngine {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
+    const dest = this.getMaster();
+    if (!dest) return;
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -167,7 +195,7 @@ class RetroAudioEngine {
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(dest);
     osc.start(now);
     osc.stop(now + 0.09);
   }
@@ -176,6 +204,8 @@ class RetroAudioEngine {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
+    const dest = this.getMaster();
+    if (!dest) return;
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -188,7 +218,7 @@ class RetroAudioEngine {
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(dest);
     osc.start(now);
     osc.stop(now + 0.35);
   }
@@ -197,6 +227,8 @@ class RetroAudioEngine {
     if (this.muted) return;
     this.ensureContext();
     if (!this.ctx) return;
+    const dest = this.getMaster();
+    if (!dest) return;
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -209,7 +241,7 @@ class RetroAudioEngine {
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(dest);
     osc.start(now);
     osc.stop(now + 0.28);
   }
@@ -219,6 +251,8 @@ class RetroAudioEngine {
     this.setSiren(0);
     this.ensureContext();
     if (!this.ctx) return;
+    const dest = this.getMaster();
+    if (!dest) return;
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
@@ -231,15 +265,25 @@ class RetroAudioEngine {
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.85);
 
     osc.connect(gain);
-    gain.connect(this.ctx.destination);
+    gain.connect(dest);
     osc.start(now);
     osc.stop(now + 0.85);
   }
 
   toggleMute() {
     this.muted = !this.muted;
+    this.ensureContext();
+    if (this.ctx && this.masterGain) {
+      try {
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.muted ? 0 : 1, now);
+      } catch (e) {}
+    }
     if (this.muted) {
-      if (this.sirenGain) this.sirenGain.gain.setValueAtTime(0, this.ctx.currentTime);
+      if (this.sirenGain && this.ctx) {
+        try { this.sirenGain.gain.setValueAtTime(0, this.ctx.currentTime); } catch (e) {}
+      }
     } else {
       if (this.sirenMode > 0) {
         const m = this.sirenMode;
@@ -247,7 +291,21 @@ class RetroAudioEngine {
         this.setSiren(m);
       }
     }
+    this.syncMuteUI();
     return this.muted;
+  }
+
+  syncMuteUI() {
+    const text = this.muted ? '🔇 Muted' : '🔊 Sound';
+    const elements = document.querySelectorAll('.btn-sound-toggle, #btnSound, #btnSoundBottom');
+    elements.forEach(el => {
+      el.textContent = text;
+      if (this.muted) {
+        el.classList.add('is-muted');
+      } else {
+        el.classList.remove('is-muted');
+      }
+    });
   }
 }
 
@@ -1011,8 +1069,7 @@ window.addEventListener('keydown', (e) => {
       else if (state === 'PAUSED') { state = 'PLAYING'; audio.setSiren(frightenedTimer > 0 ? 2 : 1); }
       break;
     case 'm': case 'M':
-      const muted = audio.toggleMute();
-      document.getElementById('btnSound').textContent = muted ? '🔇 Muted' : '🔊 Sound';
+      audio.toggleMute();
       break;
     case ' ': case 'Enter':
       if (state === 'START_SCREEN' || state === 'GAME_OVER') startNewGame();
@@ -1021,26 +1078,43 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Touch and Button Controls for Mobile (iPhone, iPad, Android)
-document.getElementById('btnUp').onclick = () => { audio.ensureContext(); pacman.nextDir = 'UP'; };
-document.getElementById('btnDown').onclick = () => { audio.ensureContext(); pacman.nextDir = 'DOWN'; };
-document.getElementById('btnLeft').onclick = () => { audio.ensureContext(); pacman.nextDir = 'LEFT'; };
-document.getElementById('btnRight').onclick = () => { audio.ensureContext(); pacman.nextDir = 'RIGHT'; };
-document.getElementById('btnStart').onclick = () => {
-  audio.ensureContext();
+// Robust Touch & Pointer Handlers (No delay, no double-trigger)
+function attachPress(target, action) {
+  const el = typeof target === 'string' ? document.getElementById(target) : target;
+  if (!el) return;
+  let lastTime = 0;
+  const trigger = (e) => {
+    const now = Date.now();
+    if (now - lastTime < 100) return;
+    lastTime = now;
+    if (e.cancelable && e.type !== 'click') e.preventDefault();
+    audio.ensureContext();
+    action(e);
+  };
+  el.addEventListener('pointerdown', trigger, { passive: false });
+  el.addEventListener('click', trigger);
+}
+
+attachPress('btnUp', () => { pacman.nextDir = 'UP'; });
+attachPress('btnDown', () => { pacman.nextDir = 'DOWN'; });
+attachPress('btnLeft', () => { pacman.nextDir = 'LEFT'; });
+attachPress('btnRight', () => { pacman.nextDir = 'RIGHT'; });
+
+attachPress('btnStart', () => {
   if (state === 'START_SCREEN' || state === 'GAME_OVER') startNewGame();
   else if (state === 'PAUSED') { state = 'PLAYING'; audio.setSiren(frightenedTimer > 0 ? 2 : 1); }
-};
-document.getElementById('btnPause').onclick = () => {
-  audio.ensureContext();
+});
+
+attachPress('btnPause', () => {
   if (state === 'PLAYING') { state = 'PAUSED'; audio.setSiren(0); }
   else if (state === 'PAUSED') { state = 'PLAYING'; audio.setSiren(frightenedTimer > 0 ? 2 : 1); }
-};
-document.getElementById('btnSound').onclick = () => {
-  audio.ensureContext();
-  const muted = audio.toggleMute();
-  document.getElementById('btnSound').textContent = muted ? '🔇 Muted' : '🔊 Sound';
-};
+});
+
+document.querySelectorAll('.btn-sound-toggle, #btnSound, #btnSoundBottom').forEach(btn => {
+  attachPress(btn, () => {
+    audio.toggleMute();
+  });
+});
 
 // Canvas Swipe Gesture for Touch Devices
 let touchStartX = 0, touchStartY = 0;
