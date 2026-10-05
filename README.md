@@ -14,21 +14,39 @@
 
 ---
 
-# Play Instantly (No Building Required)
+# 🚀 Direct Downloads (No Zip Extraction Needed)
 
-Pre-packaged versions are ready for all platforms so anyone can download and play immediately without installing compilers or build tools.
+Direct, zero-setup standalone files are ready for all platforms. Just download and play directly!
 
-### 🍏 macOS (One-Click App)
-- Double-click **`Pac-Man.app`** in the project folder (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)).
-- **No Homebrew or SDL required:** Dynamic libraries (`SDL2` and `SDL3`) are pre-bundled inside the application bundle.
+| Platform | Download File | Format | How to Play |
+| :--- | :--- | :--- | :--- |
+| **Windows** | [**`Pac-Man.exe`**](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.exe) *(2.6 MB)* | **Standalone `.exe`** | Download & double-click to play immediately (no zip, no DLLs)! |
+| **Android** | [**`Pac-Man.apk`**](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.apk) *(1.9 MB)* | **Direct `.apk`** | Download & tap to install directly on your phone/tablet! |
+| **macOS** | [**`Pac-Man.dmg`**](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.dmg) *(4.4 MB)* | **Installer `.dmg`** | Open DMG & drag Pac-Man to Applications folder! |
+| **iPhone / iPad** | [**`Pac-Man.ipa`**](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.ipa) *(1.9 MB)* | **Direct `.ipa`** | Install via Sideloadly / AltStore / TrollStore or [1-Tap Profile](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.mobileconfig)! |
 
-### 📱 iPhone & iPad (iOS & iPadOS)
-- **Direct Sideload Package (IPA):** Download **[`Pac-Man.ipa`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.ipa)** (or from the `dist/` folder) and install with **AltStore**, **Sideloadly**, **TrollStore**, **Scarlet**, or Xcode/Apple Configurator. Full native ARM64 Mach-O app with embedded arcade audio and touch controls.
-- **1-Tap Profile Install:** Download **[`Pac-Man.mobileconfig`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.mobileconfig)** on iOS, tap *Allow*, then go to *Settings ➔ Profile Downloaded ➔ Install* to place the full-screen arcade app directly on your Home Screen.
-- **Safari Instant Play:** Open `web/index.html` in **Safari**, tap **Share** ➔ **Add to Home Screen**.
+---
 
-### 🤖 Android (APK & Native Mobile)
-- **Direct APK Install (Download & Play):** Download **[`Pac-Man.apk`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.apk)** (or from the `dist/` folder) directly onto your Android device and tap to install! Fully offline, hardware accelerated, immersive sticky fullscreen with enlarged right-side arcade touch D-pad & swipe controls. Signed by **Md. Abu Rise Zunaed**.
+### 🪟 Windows (Direct Standalone .EXE)
+- Download **[`Pac-Man.exe`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.exe)** and double-click to play!
+- 100% standalone binary with SDL2 statically embedded—no zip file, no installation, and no extra DLLs needed.
+
+> ⚠️ **Windows SmartScreen Warning**  
+> When running the game for the first time, Windows may display a **“Windows protected your PC”** message because the game is currently unsigned and not yet recognized by Microsoft.  
+> This does not necessarily mean there is a problem with the game.  
+>   
+> **To run the game:**  
+> 1. Open the game's `.exe` file (`Pac-Man.exe`).  
+> 2. If the “Windows protected your PC” window appears, click **More info**.  
+> 3. Click **Run anyway**.  
+> 4. The game should launch normally.  
+>   
+> *Note: Only choose “Run anyway” if you downloaded the game from the official source/repository and you trust the file. As the game becomes officially published and signed, this warning may no longer appear.*
+
+---
+
+### 🤖 Android (Direct Standalone .APK)
+- Download **[`Pac-Man.apk`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.apk)** directly onto your Android device and tap to install! Fully offline, hardware accelerated, immersive sticky fullscreen with enlarged right-side arcade touch D-pad & swipe controls. Signed by **Md. Abu Rise Zunaed**.
 
 > ⚠️ **Android Install Warning / Play Protect**  
 > When installing the APK directly on Android, Google Play Protect or your system package installer may display an *"Unrecognized app"* or *"File might be harmful"* message because it was downloaded outside the Google Play Store.  
@@ -39,26 +57,26 @@ Pre-packaged versions are ready for all platforms so anyone can download and pla
 > 3. If prompted by your browser or file manager, enable **"Allow from this source"**.  
 > 4. The game will install and launch smoothly!
 
-- **Instant 1-Tap WebAPK:** Open `web/index.html` in **Google Chrome**, tap the **Menu (⋮)** in the top right ➔ tap **"Install app"** (or "Add to Home screen").
-- **Android Studio Project Package:** Download **`dist/Pac-Man-Android.zip`** containing the full source project and `./build_apk.sh`.
+---
 
-### 🪟 Windows (PC)
-- **One-Click Native Game:** Download **`dist/Pac-Man-Windows.zip`** (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)), **extract the zip file first**, and double-click **`pacman.exe`** to play immediately! All runtime libraries (`SDL2.dll`, `libwinpthread`) and the custom arcade icon are pre-bundled—zero building or installation required.
+### 🍏 macOS (Direct Drag & Drop .DMG)
+- Download **[`Pac-Man.dmg`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.dmg)**.
+- Double-click to mount the disk image, then drag **`Pac-Man.app`** into your **Applications** folder.
+- Pre-bundled with all required SDL libraries—zero dependencies needed!
 
-> ⚠️ **Windows SmartScreen Warning**  
-> When running the game for the first time, Windows may display a **“Windows protected your PC”** message because the game is currently unsigned and not yet recognized by Microsoft.  
-> This does not necessarily mean there is a problem with the game.  
->   
-> **To run the game:**  
-> 1. Extract the downloaded zip file first.  
-> 2. Open the game's `.exe` file (`pacman.exe`).  
-> 3. If the “Windows protected your PC” window appears, click **More info**.  
-> 4. Click **Run anyway**.  
-> 5. The game should launch normally.  
->   
-> *Note: Only choose “Run anyway” if you downloaded the game from the official source/repository and you trust the file. As the game becomes officially published and signed, this warning may no longer appear.*
+---
 
-- **Web Desktop App:** Open `web/index.html` in **Microsoft Edge** or **Google Chrome**, then click the **"Install"** button in the address bar to install Pac-Man as a native Windows desktop app with desktop shortcut.
+### 💻 Developer Source Code (View, Build & Play)
+
+For developers, contributors, and anyone who wants to inspect the code, customize, or compile from scratch:
+- **Download Complete Source Archive:** [**`Pac-Man-Source-Code.zip`**](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man-Source-Code.zip)
+- Or clone the repository directly:
+  ```bash
+  git clone https://github.com/mdaburisezunaed/Pac_man.git
+  cd Pac_man
+  ```
+
+---
 
 ---
 

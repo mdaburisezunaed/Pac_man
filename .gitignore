@@ -2,6 +2,7 @@
 pacman
 *.o
 *.exe
+!dist/Pac-Man.exe
 output/
 highscore.dat
 
