@@ -62,7 +62,29 @@ Direct, zero-setup standalone files are ready for all platforms. Just download a
 ### 🍏 macOS (Direct Drag & Drop .DMG)
 - Download **[`Pac-Man.dmg`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.dmg)**.
 - Double-click to mount the disk image, then drag **`Pac-Man.app`** into your **Applications** folder.
-- Pre-bundled with all required SDL libraries—zero dependencies needed!
+- Pre-bundled with all required SDL libraries—zero dependencies or terminal setup needed!
+
+> ⚠️ **macOS Gatekeeper Notice ("App is damaged" or "Unidentified Developer")**  
+> Because the application is downloaded from GitHub and ad-hoc signed, macOS Gatekeeper may quarantine it and show:  
+> *“Pac-Man is damaged and can’t be opened”* or *“Cannot be opened because Apple cannot check it for malicious software”*.  
+> This does not mean anything is wrong with the game.  
+>   
+> **How to fix and run the game (choose either method):**  
+>   
+> **Method 1: One-Line Terminal Command (Fastest)**  
+> Open **Terminal** and run:  
+> ```bash
+> xattr -cr /Applications/Pac-Man.app
+> ```  
+> *(If `Pac-Man.app` is in your Downloads folder, run `xattr -cr ~/Downloads/Pac-Man.app`)*.  
+> This clears the quarantine flag, and the game will open normally with a double-click!  
+>   
+> **Method 2: System Settings**  
+> 1. Double-click `Pac-Man.app` once. When the warning appears, click **Cancel**.  
+> 2. Open **System Settings > Privacy & Security**.  
+> 3. Scroll down to the **Security** section where you will see:  
+>    *“Pac-Man was blocked from use because it is not from an identified developer.”*  
+> 4. Click **Open Anyway** and confirm **Open**.
 
 ---
 
@@ -78,73 +100,9 @@ For developers, contributors, and anyone who wants to inspect the code, customiz
 
 ---
 
----
-
 # Installation & Running (From Source)
 
-## macOS
-
-### Step 1: Install Command Line Tools
-
-Open **Terminal** and run:
-
-```bash
-xcode-select --install
-```
-
-Follow the installation prompts.
-
-### Step 2: Install Homebrew
-
-If Homebrew is not already installed, run:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Add Homebrew to your PATH:
-
-```bash
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-Verify the installation:
-
-```bash
-brew --version
-```
-
-### Step 3: Install SDL2
-
-```bash
-brew install sdl2
-```
-
-### Step 4: Navigate to the Project Directory
-
-Open Terminal and use `cd` to enter the Pac-Man project folder.
-
-Example:
-
-```bash
-cd ~/Desktop/Codes/Pac_man
-```
-
-> **Tip:** You can type `cd ` and drag the project folder into Terminal to automatically enter its path.
-
-### Step 5: Build the Game
-
-```bash
-make
-```
-
-### Step 6: Run the Game
-
-```bash
-./pacman
-```
-Enjoy the game!
+The sections below are only for developers who wish to compile the C++ source code manually. General users should use the [Direct Downloads](#-direct-downloads-no-zip-extraction-needed) above.
 
 ---
 
