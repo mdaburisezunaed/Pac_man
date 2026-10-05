@@ -27,9 +27,10 @@ Pre-packaged versions are ready for all platforms so anyone can download and pla
 - Tap the **Share** button (box with upward arrow) ➔ tap **"Add to Home Screen"**.
 - A native **Pac-Man** app icon will appear on your home screen. Tap it to play in fullscreen with touch controls (swipe & virtual D-pad) and synthesized arcade audio.
 
-### 🤖 Android (Smartphones & Tablets)
-- **Instant 1-Tap App Install:** Open `web/index.html` in **Google Chrome**, tap the **Menu (⋮)** in the top right ➔ tap **"Install app"** (or "Add to Home screen"). Pac-Man installs directly to your Android app drawer with the official logo. Opens in full screen with touch and swipe controls.
-- **Android Studio Project Package:** Download **`dist/Pac-Man-Android.zip`** (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)) containing the complete Android Studio project with immersive fullscreen mode, mipmap icons, and pre-bundled assets.
+### 🤖 Android (APK & Native Mobile)
+- **Direct APK Install (Download & Play):** Download **[`Pac-Man.apk`](https://github.com/mdaburisezunaed/Pac_man/releases/download/v1.0.0/Pac-Man.apk)** (or from the `dist/` folder) directly onto your Android device and tap to install! Fully offline, hardware accelerated, immersive sticky fullscreen with arcade touch D-pad & swipe controls. Signed by **Md. Abu Rise Zunaed**.
+- **Instant 1-Tap WebAPK:** Open `web/index.html` in **Google Chrome**, tap the **Menu (⋮)** in the top right ➔ tap **"Install app"** (or "Add to Home screen").
+- **Android Studio Project Package:** Download **`dist/Pac-Man-Android.zip`** containing the full source project and `./build_apk.sh`.
 
 ### 🪟 Windows (PC)
 - **One-Click Native Game:** Extract **`dist/Pac-Man-Windows.zip`** (or download from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases)) and double-click **`pacman.exe`** to play immediately! All runtime libraries (`SDL2.dll`, `libwinpthread`) and the custom arcade icon are pre-bundled—zero building or installation required.

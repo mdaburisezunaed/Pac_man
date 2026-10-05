@@ -4,16 +4,28 @@
 
 ---
 
-## Option 1: Native Android Project (`Pac-Man-Android.zip`)
+## Option 1: Direct Standalone APK Install (`Pac-Man.apk`)
 
-Download **`Pac-Man-Android.zip`** from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases) or the `dist/` folder:
-- **Immersive Fullscreen:** Uses `SYSTEM_UI_FLAG_IMMERSIVE_STICKY` with full hardware acceleration.
-- **Pre-packaged Assets:** Includes all game logic, retro sounds, custom icons (`mdpi`, `hdpi`, `xhdpi`, `xxhdpi`, `xxxhdpi`), and responsive layout.
-- **Open in Android Studio:** Open the extracted directory in Android Studio and hit **Run** or build the signed APK (`Build > Build Bundle(s) / APK(s) > Build APK(s)`).
+Download **`Pac-Man.apk`** from [GitHub Releases](https://github.com/mdaburisezunaed/Pac_man/releases) or the `dist/` directory:
+1. Transfer or download **`Pac-Man.apk`** directly to your Android device.
+2. Tap the downloaded file in your Files / Downloads app to install.
+   - *If prompted by Android, allow "Install from Unknown Sources" or "Install Unknown Apps" for your browser/file manager.*
+3. Open **Pac-Man** from your app drawer and enjoy!
+   - ⚡ **Zero-build & fully offline**: Runs without internet connection.
+   - 🎮 **Immersive fullscreen sticky mode**: Hides navigation and status bars.
+   - 🕹️ **Arcade touch controls**: On-screen retro D-pad + responsive swipe gestures.
 
 ---
 
-## Option 2: Zero-Build Instant Play (WebAPK / PWA)
+## Option 2: Native Android Studio Project (`dist/Android/` or `Pac-Man-Android.zip`)
+
+- Open the `dist/Android` project folder in **Android Studio**.
+- Hit **Run** or use the included `./build_apk.sh` script to re-compile anytime.
+- Signed with the pre-configured keystore `pacman.keystore` (Developer: **Md. Abu Rise Zunaed**).
+
+---
+
+## Option 3: Zero-Build Instant WebAPK / PWA
 
 Android users can install and play Pac-Man without any coding, compiler, or build tools via WebAPK / PWA installation:
 
