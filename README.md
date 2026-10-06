@@ -7,6 +7,7 @@
 ## Controls
 
 - **Move:** Arrow Keys / `W`, `A`, `S`, `D`
+- **Fullscreen:** `F` / `F11` / `Alt+Enter`
 - **Start / Restart:** `Space` / `Enter`
 - **Pause:** `P`
 - **Mute:** `M`

@@ -20,11 +20,11 @@ using namespace std;
 
 const int COLS = 28;
 const int ROWS = 31;
-const int TILE_SIZE = 24;
-const int HEADER_H = 60;
-const int FOOTER_H = 46;
-const int WIN_W = COLS * TILE_SIZE; // 672
-const int WIN_H = HEADER_H + (ROWS * TILE_SIZE) + FOOTER_H; // 850
+const int TILE_SIZE = 19;
+const int HEADER_H = 48;
+const int FOOTER_H = 38;
+const int WIN_W = COLS * TILE_SIZE; // 532
+const int WIN_H = HEADER_H + (ROWS * TILE_SIZE) + FOOTER_H; // 675
 
 // 1: wall, 2: dot, 3: energizer, 0: empty, 4: gate, 5: house, 6: tunnel
 const vector<string> RAW_MAZE = {
@@ -185,18 +185,18 @@ struct Note {
 };
 
 const vector<Note> INTRO_MELODY = {
-    { 493.88, 0.14 }, { 987.77, 0.14 }, { 739.99, 0.14 }, { 622.25, 0.14 },
-    { 987.77, 0.08 }, { 739.99, 0.18 }, { 622.25, 0.22 },
-    { 523.25, 0.14 }, { 1046.50, 0.14 }, { 783.99, 0.14 }, { 659.25, 0.14 },
-    { 1046.50, 0.08 }, { 783.99, 0.18 }, { 659.25, 0.22 },
-    { 493.88, 0.14 }, { 987.77, 0.14 }, { 739.99, 0.14 }, { 622.25, 0.14 },
-    { 987.77, 0.08 }, { 739.99, 0.18 }, { 622.25, 0.22 },
-    { 622.25, 0.08 }, { 659.25, 0.08 }, { 698.46, 0.08 }, { 698.46, 0.08 },
-    { 739.99, 0.08 }, { 783.99, 0.08 }, { 830.61, 0.08 }, { 880.00, 0.08 },
-    { 987.77, 0.40 }
+    { 493.88, 0.165 }, { 987.77, 0.165 }, { 739.99, 0.165 }, { 622.25, 0.165 },
+    { 987.77, 0.165 }, { 739.99, 0.165 }, { 622.25, 0.32 },
+    { 523.25, 0.165 }, { 1046.50, 0.165 }, { 783.99, 0.165 }, { 659.25, 0.165 },
+    { 1046.50, 0.165 }, { 783.99, 0.165 }, { 659.25, 0.32 },
+    { 493.88, 0.165 }, { 987.77, 0.165 }, { 739.99, 0.165 }, { 622.25, 0.165 },
+    { 987.77, 0.165 }, { 739.99, 0.165 }, { 622.25, 0.32 },
+    { 622.25, 0.11 }, { 659.25, 0.11 }, { 698.46, 0.11 }, { 739.99, 0.11 },
+    { 783.99, 0.11 }, { 830.61, 0.11 }, { 880.00, 0.11 }, { 987.77, 0.45 }
 };
 
 struct AudioSys {
+    int sample_rate = 44100;
     bool muted = false;
     bool music_active = false;
     bool playing_intro = false;
@@ -275,7 +275,7 @@ static AudioSys g_audio;
 void audio_cb(void*, Uint8* stream, int len) {
     Sint16* buf = reinterpret_cast<Sint16*>(stream);
     int n = len / sizeof(Sint16);
-    double sr = 44100.0;
+    double sr = (g_audio.sample_rate > 0) ? static_cast<double>(g_audio.sample_rate) : 44100.0;
 
     for (int i = 0; i < n; i++) {
         double mus = 0.0;
@@ -302,7 +302,7 @@ void audio_cb(void*, Uint8* stream, int len) {
                     g_audio.music_active = (g_audio.siren_mode > 0);
                 }
             } else if (g_audio.siren_mode > 0) {
-                double speed = (g_audio.siren_mode == 2 ? 4.5 : (g_audio.siren_mode == 3 ? 9.0 : 1.8));
+                double speed = (g_audio.siren_mode == 2 ? 4.0 : (g_audio.siren_mode == 3 ? 8.0 : 1.6));
                 g_audio.siren_phase += (2.0 * M_PI * speed) / sr;
                 if (g_audio.siren_phase > 2.0 * M_PI) g_audio.siren_phase -= 2.0 * M_PI;
 
@@ -399,10 +399,10 @@ struct Pacman {
     float y = 23.0f * TILE_SIZE + TILE_SIZE / 2.0f;
     Direction dir = Direction::LEFT;
     Direction next_dir = Direction::LEFT;
-    float speed = 2.4f;
+    float speed = 1.65f;
 
     float mouth_tan = 0.35f;
-    float mouth_speed = 0.035f;
+    float mouth_speed = 0.031f;
     bool mouth_closing = false;
     float death_prog = 0.0f;
 
@@ -425,9 +425,9 @@ struct Ghost {
     Pos scatter_target;
     GhostState state;
     Direction dir = Direction::UP;
-    float normal_speed = 2.0f;
-    float fright_speed = 1.2f;
-    float eaten_speed = 4.2f;
+    float normal_speed = 1.38f;
+    float fright_speed = 0.88f;
+    float eaten_speed = 2.75f;
     int bounce_dir = -1;
     int last_tx = -1;
     int last_ty = -1;
@@ -500,6 +500,13 @@ public:
         SDL_Quit();
     }
 
+    void toggle_fullscreen() {
+        if (!window) return;
+        Uint32 flags = SDL_GetWindowFlags(window);
+        bool is_full = (flags & (SDL_WINDOW_FULLSCREEN | SDL_WINDOW_FULLSCREEN_DESKTOP)) != 0;
+        SDL_SetWindowFullscreen(window, is_full ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+    }
+
     void load_hi_score() {
         ifstream f("highscore.dat");
         if (f.is_open()) {
@@ -555,7 +562,7 @@ public:
         init_maze();
         reset_positions();
         state = GameState::READY;
-        freeze_timer = 240;
+        freeze_timer = 310;
         g_audio.play_intro();
     }
 
@@ -565,19 +572,33 @@ public:
             return false;
         }
 
+        int win_w = WIN_W;
+        int win_h = WIN_H;
+        SDL_Rect usable;
+        if (SDL_GetDisplayUsableBounds(0, &usable) == 0) {
+            int max_h = usable.h - 70;
+            if (win_h > max_h && max_h > 300) {
+                float sc = static_cast<float>(max_h) / static_cast<float>(WIN_H);
+                win_h = max_h;
+                win_w = static_cast<int>(WIN_W * sc);
+            }
+        }
+
         window = SDL_CreateWindow(
             "PAC-MAN Arcade Edition (C++17)",
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            WIN_W, WIN_H,
-            SDL_WINDOW_SHOWN
+            win_w, win_h,
+            SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
         );
         if (!window) return false;
 
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
         renderer = SDL_CreateRenderer(
             window, -1,
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
         );
         if (!renderer) return false;
+        SDL_RenderSetLogicalSize(renderer, WIN_W, WIN_H);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
         SDL_AudioSpec sp;
@@ -588,7 +609,9 @@ public:
         sp.samples = 1024;
         sp.callback = audio_cb;
 
-        if (SDL_OpenAudio(&sp, nullptr) == 0) {
+        SDL_AudioSpec obtained;
+        if (SDL_OpenAudio(&sp, &obtained) == 0) {
+            g_audio.sample_rate = (obtained.freq > 0) ? obtained.freq : 44100;
             SDL_PauseAudio(0);
         }
 
@@ -604,6 +627,7 @@ public:
 
         if (ny == 14 && (nx < 0 || nx >= COLS)) return true;
         if (nx < 0 || nx >= COLS || ny < 0 || ny >= ROWS) return false;
+        if (ny != 14 && (nx <= 0 || nx >= COLS - 1)) return false;
 
         int cell = maze[ny][nx];
         if (cell == 1) return false;
@@ -649,13 +673,28 @@ public:
                     case SDLK_m:
                         g_audio.toggle_mute();
                         break;
+                    case SDLK_f:
+                    case SDLK_F11:
+                        toggle_fullscreen();
+                        break;
                     case SDLK_SPACE:
-                    case SDLK_RETURN:
                         if (state == GameState::START_SCREEN || state == GameState::GAME_OVER) {
                             new_game();
                         } else if (state == GameState::PAUSED) {
                             state = GameState::PLAYING;
                             g_audio.set_siren(fright_timer > 0 ? 2 : 1);
+                        }
+                        break;
+                    case SDLK_RETURN:
+                        if (e.key.keysym.mod & (KMOD_ALT | KMOD_GUI)) {
+                            toggle_fullscreen();
+                        } else {
+                            if (state == GameState::START_SCREEN || state == GameState::GAME_OVER) {
+                                new_game();
+                            } else if (state == GameState::PAUSED) {
+                                state = GameState::PLAYING;
+                                g_audio.set_siren(fright_timer > 0 ? 2 : 1);
+                            }
                         }
                         break;
                     case SDLK_ESCAPE:
@@ -680,7 +719,7 @@ public:
         }
 
         float dc = hypot(pacman.x - cx, pacman.y - cy);
-        if (pacman.next_dir != pacman.dir && dc < 6.0f) {
+        if (pacman.next_dir != pacman.dir && dc < 5.0f) {
             if (can_pass(tx, ty, pacman.next_dir)) {
                 pacman.x = cx;
                 pacman.y = cy;
@@ -830,32 +869,33 @@ public:
     }
 
     Direction choose_dir(Ghost& g, int tx, int ty) {
+        Direction opp = Direction::NONE;
+        if (g.dir == Direction::UP) opp = Direction::DOWN;
+        else if (g.dir == Direction::DOWN) opp = Direction::UP;
+        else if (g.dir == Direction::LEFT) opp = Direction::RIGHT;
+        else if (g.dir == Direction::RIGHT) opp = Direction::LEFT;
+
+        if (ty == 14 && (tx <= 5 || tx >= 22)) {
+            if (g.dir == Direction::LEFT || g.dir == Direction::RIGHT) {
+                if (can_pass(tx, ty, g.dir, true, g.state)) return g.dir;
+            }
+        }
+
         if (g.state == GhostState::FRIGHTENED) {
             vector<Direction> choices;
-            Direction opp = Direction::NONE;
-            if (g.dir == Direction::UP) opp = Direction::DOWN;
-            else if (g.dir == Direction::DOWN) opp = Direction::UP;
-            else if (g.dir == Direction::LEFT) opp = Direction::RIGHT;
-            else if (g.dir == Direction::RIGHT) opp = Direction::LEFT;
-
             for (Direction d : { Direction::UP, Direction::LEFT, Direction::DOWN, Direction::RIGHT }) {
                 if (d != opp && can_pass(tx, ty, d, true, g.state)) {
                     choices.push_back(d);
                 }
             }
             if (!choices.empty()) return choices[rand() % choices.size()];
+            if (can_pass(tx, ty, opp, true, g.state)) return opp;
             return g.dir;
         }
 
         Pos tgt = get_target(g);
         Direction best_d = Direction::NONE;
         float min_d = 1e9f;
-
-        Direction opp = Direction::NONE;
-        if (g.dir == Direction::UP) opp = Direction::DOWN;
-        else if (g.dir == Direction::DOWN) opp = Direction::UP;
-        else if (g.dir == Direction::LEFT) opp = Direction::RIGHT;
-        else if (g.dir == Direction::RIGHT) opp = Direction::LEFT;
 
         for (Direction d : { Direction::UP, Direction::LEFT, Direction::DOWN, Direction::RIGHT }) {
             if (d == opp) continue;
@@ -874,6 +914,20 @@ public:
                 }
             }
         }
+
+        if (best_d == Direction::NONE && can_pass(tx, ty, opp, true, g.state)) {
+            best_d = opp;
+        }
+
+        if (best_d == Direction::NONE) {
+            for (Direction d : { Direction::UP, Direction::LEFT, Direction::DOWN, Direction::RIGHT }) {
+                if (can_pass(tx, ty, d, true, g.state)) {
+                    best_d = d;
+                    break;
+                }
+            }
+        }
+
         return (best_d != Direction::NONE) ? best_d : g.dir;
     }
 
@@ -929,7 +983,7 @@ public:
                 float door_x = 13.5f * TILE_SIZE;
                 float door_y = 11.5f * TILE_SIZE;
 
-                if (abs(g.x - door_x) > 1.0f) {
+                if (abs(g.x - door_x) > g.normal_speed) {
                     g.x += (g.x < door_x) ? g.normal_speed : -g.normal_speed;
                     g.dir = (g.x < door_x) ? Direction::RIGHT : Direction::LEFT;
                 } else {
@@ -951,7 +1005,7 @@ public:
             if (g.state == GhostState::EATEN) {
                 float door_x = 13.5f * TILE_SIZE;
                 float door_y = 11.5f * TILE_SIZE;
-                if (hypot(g.x - door_x, g.y - door_y) < 4.0f) {
+                if (hypot(g.x - door_x, g.y - door_y) < 3.5f) {
                     g.x = door_x;
                     g.y = 14.0f * TILE_SIZE + TILE_SIZE / 2.0f;
                     g.state = GhostState::LEAVING_HOUSE;
@@ -965,8 +1019,8 @@ public:
             if (g.state == GhostState::FRIGHTENED) spd = g.fright_speed;
             else if (g.state == GhostState::EATEN) spd = g.eaten_speed;
 
-            int tx = static_cast<int>(g.x / TILE_SIZE);
-            int ty = static_cast<int>(g.y / TILE_SIZE);
+            int tx = static_cast<int>(floor(g.x / TILE_SIZE));
+            int ty = static_cast<int>(floor(g.y / TILE_SIZE));
             if (ty == 14 && (tx <= 5 || tx >= 22)) spd *= 0.5f;
 
             float cx = tx * TILE_SIZE + TILE_SIZE / 2.0f;
@@ -981,10 +1035,21 @@ public:
                 g.last_ty = ty;
             }
 
-            if (g.dir == Direction::LEFT) g.x -= spd;
-            else if (g.dir == Direction::RIGHT) g.x += spd;
-            else if (g.dir == Direction::UP) g.y -= spd;
-            else if (g.dir == Direction::DOWN) g.y += spd;
+            if (!can_pass(tx, ty, g.dir, true, g.state)) {
+                g.x = cx;
+                g.y = cy;
+                g.dir = choose_dir(g, tx, ty);
+            }
+
+            if (can_pass(tx, ty, g.dir, true, g.state)) {
+                if (g.dir == Direction::LEFT) g.x -= spd;
+                else if (g.dir == Direction::RIGHT) g.x += spd;
+                else if (g.dir == Direction::UP) g.y -= spd;
+                else if (g.dir == Direction::DOWN) g.y += spd;
+            } else {
+                g.x = cx;
+                g.y = cy;
+            }
 
             if (ty == 14) {
                 if (g.x < -TILE_SIZE / 2.0f) g.x = WIN_W + TILE_SIZE / 2.0f;
@@ -1108,12 +1173,12 @@ public:
                     }
                 } else if (cell == 4) {
                     SDL_SetRenderDrawColor(renderer, 244, 114, 182, 255);
-                    SDL_Rect gate = { px, py + TILE_SIZE / 2 - 2, TILE_SIZE, 4 };
+                    SDL_Rect gate = { px, py + TILE_SIZE / 2 - 2, TILE_SIZE, 3 };
                     SDL_RenderFillRect(renderer, &gate);
                 } else if (cell == 2) {
-                    draw_circle(renderer, px + TILE_SIZE / 2, py + TILE_SIZE / 2, 3, { 255, 184, 151, 255 });
+                    draw_circle(renderer, px + TILE_SIZE / 2, py + TILE_SIZE / 2, 2, { 255, 184, 151, 255 });
                 } else if (cell == 3) {
-                    draw_circle(renderer, px + TILE_SIZE / 2, py + TILE_SIZE / 2, 7, { 255, 184, 151, 255 });
+                    draw_circle(renderer, px + TILE_SIZE / 2, py + TILE_SIZE / 2, 5, { 255, 184, 151, 255 });
                 }
             }
         }
@@ -1124,9 +1189,9 @@ public:
         int fx = static_cast<int>(13.5f * TILE_SIZE);
         int fy = HEADER_H + static_cast<int>(17.5f * TILE_SIZE);
 
-        draw_circle(renderer, fx, fy, 8, STAGE_FRUITS[fruit_idx].color);
+        draw_circle(renderer, fx, fy, 6, STAGE_FRUITS[fruit_idx].color);
         SDL_SetRenderDrawColor(renderer, 34, 197, 94, 255);
-        SDL_RenderDrawLine(renderer, fx, fy - 8, fx + 3, fy - 13);
+        SDL_RenderDrawLine(renderer, fx, fy - 6, fx + 3, fy - 10);
     }
 
     void draw_ghost(const Ghost& g) {
@@ -1134,7 +1199,7 @@ public:
 
         int gx = static_cast<int>(g.x);
         int gy = HEADER_H + static_cast<int>(g.y);
-        int r = 11;
+        int r = 9;
 
         if (g.state == GhostState::EATEN) {
             draw_eyes(gx, gy, g.dir);
@@ -1156,12 +1221,12 @@ public:
         SDL_RenderFillRect(renderer, &skirt);
 
         for (int i = 0; i < 3; i++) {
-            draw_circle(renderer, gx - r + 3 + i * 8, gy + r, 3, col);
+            draw_circle(renderer, gx - r + 3 + i * 6, gy + r, 2, col);
         }
 
         if (g.state == GhostState::FRIGHTENED) {
-            draw_circle(renderer, gx - 4, gy - 2, 2, { 255, 184, 151, 255 });
-            draw_circle(renderer, gx + 4, gy - 2, 2, { 255, 184, 151, 255 });
+            draw_circle(renderer, gx - 3, gy - 2, 2, { 255, 184, 151, 255 });
+            draw_circle(renderer, gx + 3, gy - 2, 2, { 255, 184, 151, 255 });
         } else {
             draw_eyes(gx, gy, g.dir);
         }
@@ -1174,43 +1239,52 @@ public:
         else if (dir == Direction::UP) oy = -2;
         else if (dir == Direction::DOWN) oy = 2;
 
-        draw_circle(renderer, gx - 4, gy - 3, 4, { 255, 255, 255, 255 });
-        draw_circle(renderer, gx + 4, gy - 3, 4, { 255, 255, 255, 255 });
-        draw_circle(renderer, gx - 4 + ox, gy - 3 + oy, 2, { 33, 33, 255, 255 });
-        draw_circle(renderer, gx + 4 + ox, gy - 3 + oy, 2, { 33, 33, 255, 255 });
+        draw_circle(renderer, gx - 3, gy - 2, 3, { 255, 255, 255, 255 });
+        draw_circle(renderer, gx + 3, gy - 2, 3, { 255, 255, 255, 255 });
+        draw_circle(renderer, gx - 3 + ox, gy - 2 + oy, 2, { 33, 33, 255, 255 });
+        draw_circle(renderer, gx + 3 + ox, gy - 2 + oy, 2, { 33, 33, 255, 255 });
     }
 
     void draw_hud() {
-        draw_text(renderer, "1UP SCORE", 30, 12, 2, { 56, 189, 248, 255 });
-        draw_text(renderer, to_string(score), 30, 32, 2, { 255, 255, 255, 255 });
+        draw_text(renderer, "1UP SCORE", 20, 8, 2, { 56, 189, 248, 255 });
+        draw_text(renderer, to_string(score), 20, 26, 2, { 255, 255, 255, 255 });
 
-        draw_text(renderer, "HIGH SCORE", WIN_W - 170, 12, 2, { 239, 68, 68, 255 });
-        draw_text(renderer, to_string(max(score, hi_score)), WIN_W - 170, 32, 2, { 255, 255, 255, 255 });
+        draw_text(renderer, "HIGH SCORE", WIN_W - 145, 8, 2, { 239, 68, 68, 255 });
+        draw_text(renderer, to_string(max(score, hi_score)), WIN_W - 145, 26, 2, { 255, 255, 255, 255 });
 
-        int footer_y = WIN_H - 32;
-        draw_text(renderer, "LIVES:", 30, footer_y, 2, { 148, 163, 184, 255 });
+        int footer_y = WIN_H - 26;
+        draw_text(renderer, "LIVES:", 20, footer_y, 2, { 148, 163, 184, 255 });
         for (int i = 0; i < lives - 1; i++) {
-            draw_pacman(renderer, 120 + i * 26, footer_y + 6, 9.0f, 0.35f, Direction::RIGHT, { 250, 204, 21, 255 });
+            draw_pacman(renderer, 95 + i * 20, footer_y + 6, 7.0f, 0.35f, Direction::RIGHT, { 250, 204, 21, 255 });
         }
 
         string lvl = "LVL " + to_string(level);
-        draw_text(renderer, lvl, WIN_W - 110, footer_y, 2, { 34, 197, 94, 255 });
+        draw_text(renderer, lvl, WIN_W - 85, footer_y, 2, { 34, 197, 94, 255 });
 
         if (state == GameState::START_SCREEN) {
-            draw_text(renderer, "PAC-MAN", WIN_W / 2 - 80, WIN_H / 2 - 60, 4, { 250, 204, 21, 255 });
-            draw_text(renderer, "PRESS SPACE OR ENTER", WIN_W / 2 - 120, WIN_H / 2 + 10, 2, { 255, 255, 255, 255 });
-            draw_text(renderer, "MD. ABU RISE ZUNAED", WIN_W / 2 - 110, WIN_H / 2 + 50, 2, { 56, 189, 248, 255 });
+            SDL_SetRenderDrawColor(renderer, 3, 7, 18, 235);
+            SDL_Rect box = { WIN_W / 2 - 145, WIN_H / 2 - 95, 290, 190 };
+            SDL_RenderFillRect(renderer, &box);
+            SDL_SetRenderDrawColor(renderer, 37, 99, 235, 255);
+            SDL_RenderDrawRect(renderer, &box);
+
+            draw_text(renderer, "PAC-MAN", WIN_W / 2 - 63, WIN_H / 2 - 75, 3, { 250, 204, 21, 255 });
+            draw_text(renderer, "PRESS SPACE OR ENTER", WIN_W / 2 - 105, WIN_H / 2 - 20, 2, { 255, 255, 255, 255 });
+            draw_text(renderer, "TO START GAME", WIN_W / 2 - 68, WIN_H / 2 + 0, 2, { 255, 255, 255, 255 });
+            draw_text(renderer, "CONTROLS: ARROWS / WASD", WIN_W / 2 - 70, WIN_H / 2 + 30, 1, { 148, 163, 184, 255 });
+            draw_text(renderer, "F / F11: FULLSCREEN   M: MUTE", WIN_W / 2 - 85, WIN_H / 2 + 48, 1, { 56, 189, 248, 255 });
+            draw_text(renderer, "MD. ABU RISE ZUNAED", WIN_W / 2 - 58, WIN_H / 2 + 68, 1, { 250, 204, 21, 255 });
         } else if (state == GameState::READY) {
-            draw_text(renderer, "READY!", WIN_W / 2 - 36, HEADER_H + 17 * TILE_SIZE + 6, 2, { 250, 204, 21, 255 });
+            draw_text(renderer, "READY!", WIN_W / 2 - 36, HEADER_H + 17 * TILE_SIZE + 4, 2, { 250, 204, 21, 255 });
         } else if (state == GameState::PAUSED) {
-            draw_text(renderer, "GAME PAUSED", WIN_W / 2 - 65, HEADER_H + 17 * TILE_SIZE + 6, 2, { 56, 189, 248, 255 });
+            draw_text(renderer, "GAME PAUSED", WIN_W / 2 - 65, HEADER_H + 17 * TILE_SIZE + 4, 2, { 56, 189, 248, 255 });
         } else if (state == GameState::GAME_OVER) {
-            draw_text(renderer, "GAME  OVER", WIN_W / 2 - 60, HEADER_H + 17 * TILE_SIZE + 6, 2, { 239, 68, 68, 255 });
+            draw_text(renderer, "GAME  OVER", WIN_W / 2 - 60, HEADER_H + 17 * TILE_SIZE + 4, 2, { 239, 68, 68, 255 });
         }
 
         for (const auto& sp : popups) {
             SDL_Color c = { 56, 189, 248, static_cast<Uint8>(sp.alpha * 255) };
-            draw_text(renderer, sp.text, static_cast<int>(sp.x) - 12, HEADER_H + static_cast<int>(sp.y) - 6, 2, c);
+            draw_text(renderer, sp.text, static_cast<int>(sp.x) - 10, HEADER_H + static_cast<int>(sp.y) - 5, 2, c);
         }
     }
 
@@ -1222,7 +1296,7 @@ public:
         draw_fruit();
 
         if (state != GameState::START_SCREEN) {
-            draw_pacman(renderer, pacman.x, HEADER_H + pacman.y, 11.0f, pacman.mouth_tan, pacman.dir, { 250, 204, 21, 255 }, pacman.death_prog);
+            draw_pacman(renderer, pacman.x, HEADER_H + pacman.y, 9.0f, pacman.mouth_tan, pacman.dir, { 250, 204, 21, 255 }, pacman.death_prog);
             for (const auto& g : ghosts) {
                 draw_ghost(g);
             }

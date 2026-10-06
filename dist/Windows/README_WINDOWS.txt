@@ -32,6 +32,7 @@ METHOD 2: DESKTOP WEB APP (EDGE / CHROME)
 
 CONTROLS:
 - Arrow Keys or W / A / S / D : Move
+- F / F11 or Alt+Enter        : Toggle Fullscreen
 - Space or Enter              : Start Game / Restart
 - P                           : Pause / Resume
 - M                           : Mute / Unmute

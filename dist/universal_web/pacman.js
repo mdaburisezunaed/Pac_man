@@ -56,15 +56,18 @@ const STAGE_FRUITS = [
 ];
 
 const INTRO_MELODY = [
-  { freq: 493.88, dur: 0.14 }, { freq: 987.77, dur: 0.14 }, { freq: 739.99, dur: 0.14 }, { freq: 622.25, dur: 0.14 },
-  { freq: 987.77, dur: 0.08 }, { freq: 739.99, dur: 0.18 }, { freq: 622.25, dur: 0.22 },
-  { freq: 523.25, dur: 0.14 }, { freq: 1046.50, dur: 0.14 }, { freq: 783.99, dur: 0.14 }, { freq: 659.25, dur: 0.14 },
-  { freq: 1046.50, dur: 0.08 }, { freq: 783.99, dur: 0.18 }, { freq: 659.25, dur: 0.22 },
-  { freq: 493.88, dur: 0.14 }, { freq: 987.77, dur: 0.14 }, { freq: 739.99, dur: 0.14 }, { freq: 622.25, dur: 0.14 },
-  { freq: 987.77, dur: 0.08 }, { freq: 739.99, dur: 0.18 }, { freq: 622.25, dur: 0.22 },
-  { freq: 622.25, dur: 0.08 }, { freq: 659.25, dur: 0.08 }, { freq: 698.46, dur: 0.08 }, { freq: 698.46, dur: 0.08 },
-  { freq: 739.99, dur: 0.08 }, { freq: 783.99, dur: 0.08 }, { freq: 830.61, dur: 0.08 }, { freq: 880.00, dur: 0.08 },
-  { freq: 987.77, dur: 0.40 }
+  // Measure 1
+  { freq: 493.88, dur: 0.165 }, { freq: 987.77, dur: 0.165 }, { freq: 739.99, dur: 0.165 }, { freq: 622.25, dur: 0.165 },
+  { freq: 987.77, dur: 0.165 }, { freq: 739.99, dur: 0.165 }, { freq: 622.25, dur: 0.32 },
+  // Measure 2
+  { freq: 523.25, dur: 0.165 }, { freq: 1046.50, dur: 0.165 }, { freq: 783.99, dur: 0.165 }, { freq: 659.25, dur: 0.165 },
+  { freq: 1046.50, dur: 0.165 }, { freq: 783.99, dur: 0.165 }, { freq: 659.25, dur: 0.32 },
+  // Measure 3
+  { freq: 493.88, dur: 0.165 }, { freq: 987.77, dur: 0.165 }, { freq: 739.99, dur: 0.165 }, { freq: 622.25, dur: 0.165 },
+  { freq: 987.77, dur: 0.165 }, { freq: 739.99, dur: 0.165 }, { freq: 622.25, dur: 0.32 },
+  // Measure 4: chromatic run up to high B5
+  { freq: 622.25, dur: 0.11 }, { freq: 659.25, dur: 0.11 }, { freq: 698.46, dur: 0.11 }, { freq: 739.99, dur: 0.11 },
+  { freq: 783.99, dur: 0.11 }, { freq: 830.61, dur: 0.11 }, { freq: 880.00, dur: 0.11 }, { freq: 987.77, dur: 0.45 }
 ];
 
 // Web Audio Polyphonic Synthesizer
@@ -320,17 +323,17 @@ let pacman = {
   y: 23.0 * TILE_SIZE + TILE_SIZE / 2,
   dir: 'LEFT',
   nextDir: 'LEFT',
-  speed: 2.4,
+  speed: 1.9,
   mouthTan: 0.35,
   mouthClosing: false,
   deathProgress: 0.0
 };
 
 let ghosts = [
-  { name: 'Blinky', color: '#ef4444', x: 13.5 * TILE_SIZE, y: 11.0 * TILE_SIZE + 12, startX: 13.5 * TILE_SIZE, startY: 11.0 * TILE_SIZE + 12, target: [27, 0], state: 'SCATTER', dir: 'LEFT', speed: 2.0 },
-  { name: 'Pinky',  color: '#f472b6', x: 13.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 13.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [2, 0],   state: 'IN_HOUSE', dir: 'UP', speed: 2.0 },
-  { name: 'Inky',   color: '#06b6d4', x: 11.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 11.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [27, 31], state: 'IN_HOUSE', dir: 'UP', speed: 2.0 },
-  { name: 'Clyde',  color: '#f97316', x: 15.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 15.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [0, 31],  state: 'IN_HOUSE', dir: 'UP', speed: 2.0 }
+  { name: 'Blinky', color: '#ef4444', x: 13.5 * TILE_SIZE, y: 11.0 * TILE_SIZE + 12, startX: 13.5 * TILE_SIZE, startY: 11.0 * TILE_SIZE + 12, target: [27, 0], state: 'SCATTER', dir: 'LEFT', speed: 1.6 },
+  { name: 'Pinky',  color: '#f472b6', x: 13.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 13.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [2, 0],   state: 'IN_HOUSE', dir: 'UP', speed: 1.6 },
+  { name: 'Inky',   color: '#06b6d4', x: 11.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 11.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [27, 31], state: 'IN_HOUSE', dir: 'UP', speed: 1.6 },
+  { name: 'Clyde',  color: '#f97316', x: 15.5 * TILE_SIZE, y: 14.0 * TILE_SIZE + 12, startX: 15.5 * TILE_SIZE, startY: 14.0 * TILE_SIZE + 12, target: [0, 31],  state: 'IN_HOUSE', dir: 'UP', speed: 1.6 }
 ];
 
 let floatingScores = [];
@@ -605,9 +608,9 @@ function updateGhosts() {
     const tileX = Math.floor(g.x / TILE_SIZE);
     const tileY = Math.floor(g.y / TILE_SIZE);
 
-    if (tileY === 14 && (tileX < 6 || tileX > 21)) spd = 1.1;
-    if (g.state === 'FRIGHTENED') spd = 1.2;
-    if (g.state === 'EATEN') spd = 4.2;
+    if (tileY === 14 && (tileX < 6 || tileX > 21)) spd = 0.9;
+    if (g.state === 'FRIGHTENED') spd = 1.0;
+    if (g.state === 'EATEN') spd = 3.2;
 
     if (g.state === 'IN_HOUSE') {
       g.y += (g.bounceDir || -1) * 0.6;
